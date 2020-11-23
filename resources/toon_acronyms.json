@@ -1,0 +1,630 @@
+[
+	{
+		"acronym": "3pac",
+		"name": "Threepio & Chewie"
+	},
+	{
+		"acronym": "5s",
+		"name": "CT-5555 \"Fives\""
+	},
+	{
+		"acronym": "aa",
+		"name": "Admiral Ackbar"
+	},
+	{
+		"acronym": "arc",
+		"name": "ARC Trooper"
+	},
+	{
+		"acronym": "atf",
+		"name": "Ahsoka Tano (Fulcrum)"
+	},
+	{
+		"acronym": "av",
+		"name": "Asajj Ventress"
+	},
+	{
+		"acronym": "bf",
+		"name": "Boba Fett"
+	},
+	{
+		"acronym": "boba",
+		"name": "Boba Fett"
+	},
+	{
+		"acronym": "bs",
+		"name": "Bastila Shan"
+	},
+	{
+		"acronym": "bsf",
+		"name": "Bastila Shan (Fallen)"
+	},
+	{
+		"acronym": "chs",
+		"name": "Captain Han Solo"
+	},
+	{
+		"acronym": "cls",
+		"name": "Commander Luke Skywalker"
+	},
+	{
+		"acronym": "cup",
+		"name": "Coruscant Underworld Police"
+	},
+	{
+		"acronym": "malak",
+		"name": "Darth Malak"
+	},
+	{
+		"acronym": "dn",
+		"name": "Darth Nihilus"
+	},
+	{
+		"acronym": "dr",
+		"name": "Darth Revan"
+	},
+	{
+		"acronym": "ds",
+		"name": "Darth Sion"
+	},
+	{
+		"acronym": "dt",
+		"name": "Death Trooper"
+	},
+	{
+		"acronym": "dv",
+		"name": "Darth Vader"
+	},
+	{
+		"acronym": "ep",
+		"name": "Emperor Palpatine"
+	},
+	{
+		"acronym": "foe",
+		"name": "First Order Executioner"
+	},
+	{
+		"acronym": "foo",
+		"name": "First Order Officer"
+	},
+	{
+		"acronym": "fosftp",
+		"name": "First Order Special Forces TIE Pilot"
+	},
+	{
+		"acronym": "fost",
+		"name": "First Order Stormtrooper"
+	},
+	{
+		"acronym": "fotf",
+		"name": "First Order TIE Fighter"
+	},
+	{
+		"acronym": "fotp",
+		"name": "First Order TIE Pilot"
+	},
+	{
+		"acronym": "gas",
+		"name": "General Skywalker"
+	},
+	{
+		"acronym": "gat",
+		"name": "Grand Admiral Thrawn"
+	},
+	{
+		"acronym": "gg",
+		"name": "General Grievous"
+	},
+	{
+		"acronym": "gk",
+		"name": "General Kenobi"
+	},
+	{
+		"acronym": "gmt",
+		"name": "Grand Moff Tarkin"
+	},
+	{
+		"acronym": "gmy",
+		"name": "Grand Master Yoda"
+	},
+	{
+		"acronym": "hyoda",
+		"name": "Hermit Yoda"
+	},
+	{
+		"acronym": "jka",
+		"name": "Jedi Knight Anakin"
+	},
+	{
+		"acronym": "jkl",
+		"name": "Jedi Knight Luke Skywalker"
+	},
+	{
+		"acronym": "jkr",
+		"name": "Jedi Knight Revan"
+	},
+	{
+		"acronym": "jtr",
+		"name": "Rey (Jedi Training)"
+	},
+	{
+		"acronym": "kam",
+		"name": "Ki-Adi-Mundi"
+	},
+	{
+		"acronym": "kru",
+		"name": "Kylo Ren (Unmasked)"
+	},
+	{
+		"acronym": "mm",
+		"name": "Mon Mothma"
+	},
+	{
+		"acronym": "mt",
+		"name": "Mother Talzin"
+	},
+	{
+		"acronym": "ben",
+		"name": "Obi-Wan Kenobi (Old Ben)"
+	},
+	{
+		"acronym": "qgj",
+		"name": "Qui-Gon Jinn"
+	},
+	{
+		"acronym": "rolo",
+		"name": "Rebel Officer Leia Organa"
+	},
+	{
+		"acronym": "rt",
+		"name": "Resistance Trooper"
+	},
+	{
+		"acronym": "sht",
+		"name": "Shoretrooper"
+	},
+	{
+		"acronym": "set",
+		"name": "Sith Empire Trooper"
+	},
+	{
+		"acronym": "slkr",
+		"name": "Supreme Leader Kylo Ren"
+	},
+	{
+		"acronym": "snips",
+		"name": "Ahsoka"
+	},
+	{
+		"acronym": "sh",
+		"name": "Stormtrooper Han"
+	},
+	{
+		"acronym": "tfp",
+		"name": "TIE Fighter Pilot"
+	},
+	{
+		"acronym": "yolo",
+		"name": "Young Han Solo"
+	},
+	{
+		"acronym": "piett",
+		"name": "Admiral Piett"
+	},
+	{
+		"acronym": "b1",
+		"name": "B1 Battle Droid"
+	},
+	{
+		"acronym": "b2",
+		"name": "B2 Super Battle Droid"
+	},
+	{
+		"acronym": "brriss",
+		"name": "Barriss Offee"
+	},
+	{
+		"acronym": "biggs",
+		"name": "Biggs Darklighter "
+	},
+	{
+		"acronym": "3po",
+		"name": "C-3PO"
+	},
+	{
+		"acronym": "ordo",
+		"name": "Canderous Ordo"
+	},
+	{
+		"acronym": "phasma",
+		"name": "Captain Phasma"
+	},
+	{
+		"acronym": "carth",
+		"name": "Carth Onasi"
+	},
+	{
+		"acronym": "chipra",
+		"name": "Chief Chipra"
+	},
+	{
+		"acronym": "nebit",
+		"name": "Chief Nebit"
+	},
+	{
+		"acronym": "sergeant",
+		"name": "Clone SergeantPhase 1"
+	},
+	{
+		"acronym": "cwc",
+		"name": "Clone Wars Chewbacca"
+	},
+	{
+		"acronym": "dooku",
+		"name": "Count Dooku"
+	},
+	{
+		"acronym": "echo",
+		"name": "CT-21-0408 \"ECHO\""
+	},
+	{
+		"acronym": "rex",
+		"name": "CT-7567 \"Rex\""
+	},
+	{
+		"acronym": "dm",
+		"name": "Darth Maul"
+	},
+	{
+		"acronym": "sidious",
+		"name": "Darth Sidious"
+	},
+	{
+		"acronym": "traya",
+		"name": "Darth Traya"
+	},
+	{
+		"acronym": "elder",
+		"name": "Ewok Elder"
+	},
+	{
+		"acronym": "scout",
+		"name": "Ewok Scout"
+	},
+	{
+		"acronym": "ezra",
+		"name": "Ezra Bridger"
+	},
+	{
+		"acronym": "zeb",
+		"name": "Garazeb \"zeb\" Orrelios"
+	},
+	{
+		"acronym": "hux",
+		"name": "General Hux"
+	},
+	{
+		"acronym": "gba",
+		"name": "Geonosian Brood Alpha"
+	},
+	{
+		"acronym": "gs",
+		"name": "Geonosian Soldier"
+	},
+	{
+		"acronym": "spy",
+		"name": "Geonosian spy"
+	},
+	{
+		"acronym": "greef",
+		"name": "Greef Karga"
+	},
+	{
+		"acronym": "hs",
+		"name": "Han solo"
+	},
+	{
+		"acronym": "hera",
+		"name": "Hera Syndulla"
+	},
+	{
+		"acronym": "hk",
+		"name": "HK-47"
+	},
+	{
+		"acronym": "hrs",
+		"name": "Hoth Rebel Scout"
+	},
+	{
+		"acronym": "magna",
+		"name": "IG-100 MagnaGuard"
+	},
+	{
+		"acronym": "magnaguard",
+		"name": "IG-100 MagnaGuard"
+	},
+	{
+		"acronym": "isp",
+		"name": "Imperial Super command"
+	},
+	{
+		"acronym": "jf",
+		"name": "Jango Fett"
+	},
+	{
+		"acronym": "jango",
+		"name": "Jango Fett"
+	},
+	{
+		"acronym": "scavanger",
+		"name": "Jawa Scavanger"
+	},
+	{
+		"acronym": "consul",
+		"name": "Jedi Consul"
+	},
+	{
+		"acronym": "jolee",
+		"name": "Jolee Bindo"
+	},
+	{
+		"acronym": "kanan",
+		"name": "Kanan Jarrus"
+	},
+	{
+		"acronym": "lando",
+		"name": "Lando Calrissian"
+	},
+	{
+		"acronym": "lsf",
+		"name": "Luke Skywalker (Farmboy)"
+	},
+	{
+		"acronym": "luminara",
+		"name": "Luminara Unduli"
+	},
+	{
+		"acronym": "mission",
+		"name": "Mission Vao"
+	},
+	{
+		"acronym": "me",
+		"name": "Mob Enforcer"
+	},
+	{
+		"acronym": "initiate",
+		"name": "NightSister Initiate"
+	},
+	{
+		"acronym": "zombie",
+		"name": "NightSister Zombie"
+	},
+	{
+		"acronym": "spirit",
+		"name": "NightSister Spirit"
+	},
+	{
+		"acronym": "nute",
+		"name": "Nute Gunray"
+	},
+	{
+		"acronym": "daka",
+		"name": "Old Daka"
+	},
+	{
+		"acronym": "padme",
+		"name": "Padmé Amidala"
+	},
+	{
+		"acronym": "poggle",
+		"name": "Poggle the lesser"
+	},
+	{
+		"acronym": "leia",
+		"name": "Princess Leia"
+	},
+	{
+		"acronym": "r2d2",
+		"name": "r2-d2"
+	},
+	{
+		"acronym": "ref",
+		"name": "resistence hero finn"
+	},
+	{
+		"acronym": "rep",
+		"name": "resistence hero poe"
+	},
+	{
+		"acronym": "rp",
+		"name": "resistence pilot"
+	},
+	{
+		"acronym": "sabine",
+		"name": "Sabine Wren"
+	},
+	{
+		"acronym": "marauder",
+		"name": "sith marauder"
+	},
+	{
+		"acronym": "sm",
+		"name": "sith marauder"
+	},
+	{
+		"acronym": "st",
+		"name": "Sith Trooper"
+	},
+	{
+		"acronym": "mandalorian",
+		"name": "The Mandalorian"
+	},
+	{
+		"acronym": "tie pilot",
+		"name": "Tie fighter Pilot"
+	},
+	{
+		"acronym": "tfp",
+		"name": "Tie fighter Pilot"
+	},
+	{
+		"acronym": "shaman",
+		"name": "Tusken Shaman"
+	},
+	{
+		"acronym": "wedge",
+		"name": "wedge antilles"
+	},
+	{
+		"acronym": "ylando",
+		"name": "young lando calrissian"
+	},
+	{
+		"acronym": "cody",
+		"name": "CC-2224 \"Cody\""
+	},
+	{
+		"acronym": "veers",
+		"name": "General Veers"
+	},
+	{
+		"acronym": "poe",
+		"name": "General Poe"
+	},
+	{
+		"acronym": "hrsr",
+		"name": "Hoth rebel soldier"
+	},
+	{
+		"acronym": "ig-86",
+		"name": "ig-86 sentinel droid"
+	},
+	{
+		"acronym": "jkg",
+		"name": "jedi knight guardian"
+	},
+	{
+		"acronym": "savage",
+		"name": "Savage Opress"
+	},
+	{
+		"acronym": "srp",
+		"name": "scarif rebel pathfinder"
+	},
+	{
+		"acronym": "rrr",
+		"name": "Urorrur'r'r"
+	},
+	{
+		"acronym": "zam",
+		"name": "zam wesell"
+	},
+	{
+		"acronym": "cassian",
+		"name": "cassian andor"
+	},
+	{
+		"acronym": "aayla",
+		"name": "aayla secura"
+	},
+	{
+		"acronym": "holdo",
+		"name": "amilyn holdo"
+	},
+	{
+		"acronym": "aurra",
+		"name": "aurra sing"
+	},
+	{
+		"acronym": "baze",
+		"name": "baze malbus"
+	},
+	{
+		"acronym": "chewie",
+		"name": "chewbacca"
+	},
+	{
+		"acronym": "chirrut",
+		"name": "chirrut imwe"
+	},
+	{
+		"acronym": "starck",
+		"name": "Colonel starck"
+	},
+	{
+		"acronym": "krennic",
+		"name": "director krennic"
+	},
+	{
+		"acronym": "enfys",
+		"name": "Enfys Nest"
+	},
+	{
+		"acronym": "nest",
+		"name": "Enfys Nest"
+	},
+	{
+		"acronym": "ipd",
+		"name": "imperial probe droid"
+	},
+	{
+		"acronym": "probe droid",
+		"name": "imperial probe droid"
+	},
+	{
+		"acronym": "engineer",
+		"name": "Jawa Engineer"
+	},
+	{
+		"acronym": "jyn",
+		"name": "Jyn erso"
+	},
+	{
+		"acronym": "kylo",
+		"name": "kylo ren"
+	},
+	{
+		"acronym": "acolyte",
+		"name": "NS acolyte"
+	},
+	{
+		"acronym": "reys",
+		"name": "rey scavanger"
+	},
+	{
+		"acronym": "rs",
+		"name": "rey scavanger"
+	},
+	{
+		"acronym": "sa",
+		"name": "sith assasin"
+	},
+	{
+		"acronym": "assasin",
+		"name": "sith assasin"
+	},
+	{
+		"acronym": "vc",
+		"name": "veteran chewbacca"
+	},
+	{
+		"acronym": "vsc",
+		"name": "veteran smuggler chewbacca"
+	},
+	{
+		"acronym": "vshs",
+		"name": "veteran smuggler han solo"
+	},
+	{
+		"acronym": "wat",
+		"name": "wat tambor"
+	},
+	{
+		"acronym": "jml",
+		"name": "jedi master luke skywalker"
+	},
+	{
+		"acronym": "jmls",
+		"name": "jedi master luke skywalker"
+	}
+]
