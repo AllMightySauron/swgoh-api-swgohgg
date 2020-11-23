@@ -33,8 +33,8 @@ describe('Static methods', () => {
     });
 
     it('isGL', () => {
-        assert.strictEqual(SwgohGGApi.SwgohGGApi.isGL(api.getPlayerCharacter('232669733', 'VADER')), false);
-        assert.strictEqual(SwgohGGApi.SwgohGGApi.isGL(api.getPlayerCharacter('973246862', 'SLKR')), true);
+        assert.strictEqual(SwgohGGApi.SwgohGGApi.isGL(api.getPlayerUnit('232669733', 'VADER')), false);
+        assert.strictEqual(SwgohGGApi.SwgohGGApi.isGL(api.getPlayerUnit('973246862', 'SLKR')), true);
     });
 
     it('getSummaryData', () => {
@@ -51,12 +51,16 @@ describe('Static methods', () => {
         assert.strictEqual(playerStats.ships.count, SwgohGGApi.SwgohGGApi.getShipCount(player));
     });
 
-    it('getPlayerCharacterFromUnits', () => {
+    it('getPlayerUnitFromUnits', () => {
         const player = api.getPlayer('232669733');
-        const char = SwgohGGApi.SwgohGGApi.getPlayerCharacterFromUnits(player, 'Darth Vader');
 
+        const char = SwgohGGApi.SwgohGGApi.getPlayerUnitFromUnits(player, 'Darth Vader');
         assert.strictEqual(char.name, 'Darth Vader');
         assert.strictEqual(char.base_id, 'VADER');
+
+        const ship = SwgohGGApi.SwgohGGApi.getPlayerUnitFromUnits(player, 'Chimaera');
+        assert.strictEqual(ship.name, 'Chimaera');
+        assert.strictEqual(ship.base_id, 'CAPITALCHIMAERA');
     });
 });
 
@@ -128,6 +132,17 @@ describe('Local cache', () => {
         assert.strictEqual(chars.get('VADER').base_id, 'VADER');
     });
 
+    it('fetchShips', () => {
+        const config = require('../config.json');
+        const api = new SwgohGGApi.SwgohGGApi(config.user, config.password);
+
+        const ships = api.fetchShips();
+    
+        assert.strictEqual(ships.size > 0, true);
+        assert.strictEqual(ships.has('CAPITALCHIMAERA'), true);
+        assert.strictEqual(ships.get('CAPITALCHIMAERA').base_id, 'CAPITALCHIMAERA');
+    });
+
     it('fetchAbilities', () => {
         const config = require('../config.json');
         const api = new SwgohGGApi.SwgohGGApi(config.user, config.password);
@@ -187,6 +202,11 @@ describe('Local cache', () => {
         assert.strictEqual(api.findCharacter('Alpha').base_id, 'GEONOSIANBROODALPHA');
     });
 
+    it('getShip', () => {
+        assert.strictEqual(api.getShip('DUMMY'), undefined);
+        assert.strictEqual(api.getShip('CAPITALCHIMAERA').base_id, 'CAPITALCHIMAERA');
+    });
+
     it('getAbility', () => {
         assert.strictEqual(api.getAbility('DUMMY'), undefined);
         assert.strictEqual(api.getAbility('leaderskill_VADER').base_id, 'leaderskill_VADER');
@@ -215,15 +235,26 @@ describe('API data', () => {
         assert.strictEqual(guild.data.id, 66108);
     });
 
-    it('getPlayerCharacter', () => {
+    it('getPlayerUnit (toon)', () => {
         // not found
-        assert.strictEqual(api.getPlayerCharacter(232669733,'DUMMY'), undefined);
+        assert.strictEqual(api.getPlayerUnit('232669733','DUMMY'), undefined);
         // acronym
-        assert.strictEqual(api.getPlayerCharacter(232669733, 'CLS').base_id, 'COMMANDERLUKESKYWALKER');
+        assert.strictEqual(api.getPlayerUnit('232669733', 'CLS').base_id, 'COMMANDERLUKESKYWALKER');
         // full name
-        assert.strictEqual(api.getPlayerCharacter(232669733, 'Darth Vader').base_id, 'VADER');
+        assert.strictEqual(api.getPlayerUnit('232669733', 'Darth Vader').base_id, 'VADER');
         // partial name
-        assert.strictEqual(api.getPlayerCharacter(232669733, 'Alpha').base_id, 'GEONOSIANBROODALPHA');
+        assert.strictEqual(api.getPlayerUnit('232669733', 'Alpha').base_id, 'GEONOSIANBROODALPHA');
+    });
+
+    it('getPlayerUnit (ship)', () => {
+        // not found
+        assert.strictEqual(api.getPlayerUnit('232669733','DUMMY'), undefined);
+        // acronym
+        assert.strictEqual(api.getPlayerUnit('232669733', 'H1').base_id, 'CAPITALMONCALAMARICRUISER');
+        // full name
+        assert.strictEqual(api.getPlayerUnit('232669733', 'Chimaera').base_id, 'CAPITALCHIMAERA');
+        // partial name
+        assert.strictEqual(api.getPlayerUnit('232669733', 'tooth').base_id, 'HOUNDSTOOTH');
     });
 
     it('getPlayerMods', () => {

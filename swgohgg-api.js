@@ -71,7 +71,7 @@
  */
 
 /**
- * Character data as returns by the swgoh.gg/api/characters/ api.
+ * Character data as returned by the swgoh.gg/api/characters/ api.
  * @typedef {object} CharacterData
  * @property {string} name Character name.
  * @property {string} base_id Character base id.
@@ -90,6 +90,24 @@
  * @property {number} ship_slot Character ship slot.
  * @property {number} activate_shard_count Number of shards required for character activation.
  */
+
+ /**
+  * Ship data as returned by swgoh.gg/api/ships/ api.
+  * @typedef {object} ShipData
+  * @property {string} name Ship name.
+  * @property {string} base_id Ship base id.
+  * @property {string} url Ship URL from swgoh.gg.
+  * @property {string} image Ship image relative to swgoh.gg.
+  * @property {number} power Ship power.
+  * @property {string} description Ship description.
+  * @property {number} combat_type Ship combat type (always 2).
+  * @property {string} alignment Ship alignment (Light Side or Dark Side).
+  * @property {string[]} categories Array of ship categories.
+  * @property {string[]} ability_classes Array of ship ability classes.
+  * @property {string} role Ship role.
+  * @property {boolean} capital_ship Whether this is a capital ship.
+  * @property {number} activate_shard_count Number of shards neede to activate ship.
+  */
 
 /**
  * Ability data as returned by the /api/abilities api.
@@ -542,23 +560,23 @@ class SwgohGGApi {
         return result;
     }
 
-        /**
-     * Get a specific character directly from the player unit roster.
+    /**
+     * Get a specific unit directly from the player unit roster.
      * @static
      * @param {Player} player The player data object.
      * @param {string} searchName The character name to search for (exact match).
      * @returns {UnitDetail} The unit from player roster.
      */
-    static getPlayerCharacterFromUnits(player, searchName) {
+    static getPlayerUnitFromUnits(player, searchName) {
         var result;
 
         // loop over characters
         for (var i = 0; i < player.units.length; i++) {
-            const playerUnit = player.units[i].data;
+            const unit = player.units[i].data;
 
             // test for name (ignoring case)
-            if (playerUnit.name.toLowerCase() == searchName.toLowerCase()) {
-                result = playerUnit;
+            if (unit.name.toLowerCase() == searchName.toLowerCase()) {
+                result = unit;
                 break;
             }
         }
@@ -656,6 +674,7 @@ class SwgohGGApi {
             // build cache object
             this.cache = {
                 characters: this.fetchCharacters(),
+                ships: this.fetchShips(),
                 abilities: this.fetchAbilities(),
                 gear: this.fetchGear(),
                 updated: new Date()
@@ -701,6 +720,96 @@ class SwgohGGApi {
     }
 
     /**
+     * Load all ships from SWGOH.GG database using the /api/ships api.
+     */
+    fetchShips() {
+        if (this.debug) console.log('fetchShips@swgohgg-api: fetching ship data from swgoh.gg');
+
+        var result;
+
+        const xhr = this.fetch('GET', `${this.urlBase}/api/ships/`);
+
+        if (xhr.readyState == xhr.DONE && xhr.status == 200) {
+            const tempShips = JSON.parse(xhr.responseText);
+
+            /** @type {Map<string, ShipData>} */
+            result = new Map();
+
+            tempShips.forEach(ship => {
+                result.set(ship.base_id, ship);
+            });
+            
+            
+        } else {
+            console.log(`fetchShips@swgohgg-api: API error loading ships (ready state = ${xhr.readyState}, status = ${xhr.status})`);
+        }
+
+        return result;
+    }
+
+    /**
+     * Load all abilities from SWGOH.GG database using the /api/abilities.
+     * @private
+     * @returns {Max<string, AbilityData>} Map between the ability id and the corresponding ability data.
+     */
+    fetchAbilities() {
+        if (this.debug) console.log('fetchAbilities@swgohgg-api: fetching ability data from swgoh.gg');
+
+        var result;
+
+        // get ability info from swgoh.gg
+        const xhr = this.fetch('GET', `${this.urlBase}/api/abilities/`);
+
+        if (xhr.readyState == xhr.DONE && xhr.status == 200) {
+            // get character data from function
+            var tempAbilities = JSON.parse(xhr.responseText);
+
+            // create new ability map
+            result = new Map();
+
+            // add entries to map
+            tempAbilities.forEach(ability => {
+                result.set(ability.base_id, ability);
+            });
+        } else {
+            console.log(`fetchAbilities@swgohgg-api: API error loading abilities (ready state = ${xhr.readyState}, status = ${xhr.status})`);
+        }
+
+        return result;
+    }
+
+     /**
+     * Load all gear from SWGOH.GG database using the /api/gear api.
+     * @private
+     * @returns {Map<string, Gear>} Map between the gear base id and its corresponding data.
+     */
+    fetchGear() {
+        if (this.debug) console.log('fetchGear@swgohgg-api: fetching gear data from swgoh.gg');
+
+        var result;
+
+        // getting generic gear data
+        const xhr = this.fetch('GET', `${this.urlBase}/api/gear/`);
+
+        if (xhr.readyState == xhr.DONE && xhr.status == 200) {
+            // get character data from function
+            var tempGears = JSON.parse(xhr.responseText);
+
+            // create new map
+            result = new Map();
+
+            // add entries to map
+            tempGears.forEach(gear => {
+                result.set(gear.base_id, gear);
+            });
+        } else {
+            console.log(`fetchGear@swgohgg-api: API error loading gears (ready state = ${xhr.readyState}, status = ${xhr.status})`);
+        }
+
+        return result;
+    }
+
+    /**
      * Gets a character from the local cache.
      * @param {string} baseId The character base id.
      * @returns {CharacterData} The character data.
@@ -709,6 +818,17 @@ class SwgohGGApi {
         this.buildCache();
 
         return this.cache.characters.get(baseId);
+    }
+
+    /**
+     * Gets a ship from the local cache.
+     * @param {string} baseId The character base id.
+     * @returns {ShipData} The character data.
+     */
+    getShip(baseId) {
+        this.buildCache();
+
+        return this.cache.ships.get(baseId);
     }
 
     /**
@@ -762,31 +882,50 @@ class SwgohGGApi {
     }
 
     /**
-     * Load all abilities from SWGOH.GG database using the /api/abilities.
-     * @private
-     * @returns {Max<string, AbilityData>} Map between the ability id and the corresponding ability data.
+     * Gets a specific ship from the local cache (using acronyms, full name or partial name method).
+     * @param {string} name Character name.
+     * @returns {ShipData} The ship data.
      */
-    fetchAbilities() {
-        if (this.debug) console.log('fetchAbilities@swgohgg-api: fetching ability data from swgoh.gg');
+    findShip(name) {
+        if (this.debug) console.log(`findShip@swgohgg-api: searching cache for ship "${name}"`);
 
         var result;
 
-        // get ability info from swgoh.gg
-        const xhr = this.fetch('GET', `${this.urlBase}/api/abilities/`);
+        this.buildCache();
 
-        if (xhr.readyState == xhr.DONE && xhr.status == 200) {
-            // get character data from function
-            var tempAbilities = JSON.parse(xhr.responseText);
+        // lower case for comparisons
+        var searchName = name.toLowerCase();
 
-            // create new ability map
-            result = new Map();
+        // test for acronym
+        if (this.acronyms.has(searchName)) {
+            // set new search name to acronym mapping
+            searchName = this.acronyms.get(searchName).toLowerCase();
 
-            // add entries to map
-            tempAbilities.forEach(ability => {
-                result.set(ability.base_id, ability);
-            });
+            if (this.debug) console.log(`findShip@swgohgg-api: mapped "${name}" to "${searchName}"`);
+        }
+
+        // search for full unit name from cache
+        result = Array.from(this.cache.ships.values()).find(ship => ship.name.toLowerCase() == searchName);
+
+        if (result) {
+            if (this.debug) console.log(`findShip@swgohgg-api: full name matched to id "${result.base_id}" (${result.name})`);
         } else {
-            console.log(`fetchAbilities@swgohgg-api: API error loading abilities (ready state = ${xhr.readyState}, status = ${xhr.status})`);
+            // not found: try substring
+
+            // loop over characters
+            const ships = Array.from(this.cache.ships.values());
+
+            for (var i = 0; i < ships.length; i++) {
+                const ship = ships[i];
+
+                // test for name (ignoring case)
+                if (ship.name.toLowerCase().includes(searchName)) {
+                    result = ship;
+
+                    if (this.debug) console.log(`findShip@swgohgg-api: partial name matched to id "${result.base_id}" (${result.name})`);
+                    break;
+                }
+            }
         }
 
         return result;
@@ -826,44 +965,13 @@ class SwgohGGApi {
     }
 
     /**
-     * Load all gear from SWGOH.GG database using the /api/gear api.
-     * @private
-     * @returns {Map<string, Gear>} Map between the gear base id and its corresponding data.
-     */
-    fetchGear() {
-        if (this.debug) console.log('fetchGear@swgohgg-api: fetching gear data from swgoh.gg');
-
-        var result;
-
-        // getting generic gear data
-        const xhr = this.fetch('GET', `${this.urlBase}/api/gear/`);
-
-        if (xhr.readyState == xhr.DONE && xhr.status == 200) {
-            // get character data from function
-            var tempGears = JSON.parse(xhr.responseText);
-
-            // create new map
-            result = new Map();
-
-            // add entries to map
-            tempGears.forEach(gear => {
-                result.set(gear.base_id, gear);
-            });
-        } else {
-            console.log(`fetchGear@swgohgg-api: API error loading gears (ready state = ${xhr.readyState}, status = ${xhr.status})`);
-        }
-
-        return result;
-    }
-
-    /**
      * Get a gear from the local cache.
      * @param {string} baseId The gear id.
      * @returns {Gear} The desired gear.
      */
     getGear(baseId) {
         this.buildCache();
-        
+
         return this.cache.gear.get(baseId);
     }
 
@@ -914,26 +1022,29 @@ class SwgohGGApi {
     }
 
     /**
-     * Get a specific character directly from the player roster at SWOGOH.GG.
+     * Get a specific unit directly from the player roster at SWOGOH.GG.
      * @param {string} allycode The desired ally code.
-     * @param {string} charName The character name (or acronym).
+     * @param {string} name The unit name (or acronym).
      * @return {UnitDetail} Unit data.
      */
-    getPlayerCharacter(allyCode, charName) {
-        if (this.debug) console.log(`getPlayerCharacter@swgohgg-api: data request for ally code ${allyCode} and character "${charName}"`);
+    getPlayerUnit(allyCode, name) {
+        if (this.debug) console.log(`getPlayerCharacter@swgohgg-api: data request for ally code ${allyCode} and unit "${name}"`);
 
         var result;
 
         // find it
-        const char = this.findCharacter(charName);
+        const char = this.findCharacter(name);
+        const ship = this.findShip(name);
 
         // sanity check
-        if (char) {
+        if (char || ship) {
             const player = this.getPlayer(allyCode);
 
             // sanity check
-            if (player) {
-                result = SwgohGGApi.getPlayerCharacterFromUnits(player, char.name);
+            if (player && char) {
+                result = SwgohGGApi.getPlayerUnitFromUnits(player, char.name);
+            } else if (player && ship) {
+                result = SwgohGGApi.getPlayerUnitFromUnits(player, ship.name);
             }
         }
 
