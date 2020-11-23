@@ -79,8 +79,12 @@ describe('Base methods', () => {
 });
 
 describe ('API foundation', () => {
-/*it('fetchRetry', () => {
-        const reply = SwgohGGApi.SwgohGGApi.fetchRetry('GET', 'https://postman-echo.com/get?foo1=bar1&foo2=bar2', undefined, 3);
+
+    it('fetchRetry(GET)', () => {
+        const config = require('../config.json');
+        const api = new SwgohGGApi.SwgohGGApi(config.user, config.password);
+
+        const reply = api.fetchRetry('GET', 'https://postman-echo.com/get?foo1=bar1&foo2=bar2', undefined, 3);
 
         const jsonReply = JSON.parse(reply.responseText);
 
@@ -88,18 +92,28 @@ describe ('API foundation', () => {
         assert.strictEqual(jsonReply.args.foo2, 'bar2');
     });
 
-    it('fetch (GET)', () => {
-        const reply = SwgohGGApi.SwgohGGApi.fetch('GET', 'https://postman-echo.com/get?foo1=bar1&foo2=bar2');
+    it('fetchRetry(POST)', () => {
+        const config = require('../config.json');
+        const api = new SwgohGGApi.SwgohGGApi(config.user, config.password);
 
-        assert.strictEqual(reply.status, 200);
+        const reply = api.fetchRetry('POST', 'https://postman-echo.com/post?hand=wave', undefined, 3);
 
         const jsonReply = JSON.parse(reply.responseText);
 
-        assert.strictEqual(jsonReply.args.foo1, 'bar1');
-        assert.strictEqual(jsonReply.args.foo2, 'bar2');
+        assert.strictEqual(jsonReply.args.hand, 'wave');
+    });
 
-        assert.strictEqual(jsonReply.url, 'https://postman-echo.com/get?foo1=bar1&foo2=bar2');
-    });*/
+    it('fetchRetry(POST payload)', () => {
+        const config = require('../config.json');
+        const api = new SwgohGGApi.SwgohGGApi(config.user, config.password);
+
+        const reply = api.fetchRetry('POST', 'https://postman-echo.com/post', { id: 10, name: 'John' }, 3);
+
+        const jsonReply = JSON.parse(reply.responseText);
+
+        assert.strictEqual(jsonReply.data.id, 10);
+        assert.strictEqual(jsonReply.data.name, 'John');
+    });
 });
 
 describe('Local cache', () => {
