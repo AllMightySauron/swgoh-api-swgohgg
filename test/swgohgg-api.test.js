@@ -22,7 +22,7 @@ describe('Static methods', () => {
     });
 
     it ('getUnitTypeCount/getCharacterCount/getShipCount', () => {
-        const player = api.getPlayer('232669733');
+        const player = require('./player.232669733.json');
 
         assert.strictEqual(SwgohGGApi.SwgohGGApi.getUnitTypeCount(player, SwgohGGApi.CombatTypeEnum.CombatTypeChar) + 
                            SwgohGGApi.SwgohGGApi.getUnitTypeCount(player, SwgohGGApi.CombatTypeEnum.CombatTypeShip),
@@ -33,28 +33,8 @@ describe('Static methods', () => {
                            SwgohGGApi.SwgohGGApi.getShipCount(player));
     });
 
-    it('isGL', () => {
-        assert.strictEqual(SwgohGGApi.SwgohGGApi.isGL(api.getPlayerUnit('232669733', 'VADER')), false);
-        assert.strictEqual(SwgohGGApi.SwgohGGApi.isGL(api.getPlayerUnit('973246862', 'SLKR')), true);
-    });
-
-    it('getSummaryData', () => {
-        const player = api.getPlayer('973246862');
-        const playerStats = SwgohGGApi.SwgohGGApi.getSummaryData(player);
-
-        assert.strictEqual(playerStats.chars.count, playerStats.chars.levels.reduce((accumulator, currentValue) => accumulator + currentValue));
-        assert.strictEqual(playerStats.chars.count, playerStats.chars.rarities.reduce((accumulator, currentValue) => accumulator + currentValue));
-        assert.strictEqual(playerStats.chars.count, playerStats.chars.gear.reduce((accumulator, currentValue) => accumulator + currentValue));
-        assert.strictEqual(playerStats.chars.galacticLegendCount > 0, true);
-        assert.strictEqual(playerStats.chars.count, SwgohGGApi.SwgohGGApi.getCharacterCount(player));
-
-        assert.strictEqual(playerStats.ships.count, playerStats.ships.levels.reduce((accumulator, currentValue) => accumulator + currentValue));
-        assert.strictEqual(playerStats.ships.count, playerStats.ships.rarities.reduce((accumulator, currentValue) => accumulator + currentValue));
-        assert.strictEqual(playerStats.ships.count, SwgohGGApi.SwgohGGApi.getShipCount(player));
-    });
-
     it('getPlayerUnitFromUnits', () => {
-        const player = api.getPlayer('232669733');
+        const player = require('./player.232669733.json');
 
         const char = SwgohGGApi.SwgohGGApi.getPlayerUnitFromUnits(player, 'Darth Vader');
         assert.strictEqual(char.name, 'Darth Vader');
@@ -63,6 +43,28 @@ describe('Static methods', () => {
         const ship = SwgohGGApi.SwgohGGApi.getPlayerUnitFromUnits(player, 'Chimaera');
         assert.strictEqual(ship.name, 'Chimaera');
         assert.strictEqual(ship.base_id, 'CAPITALCHIMAERA');
+    });
+
+    it('isGL', () => {
+        const player = require('./player.973246862.json');
+
+        assert.strictEqual(SwgohGGApi.SwgohGGApi.isGL(SwgohGGApi.SwgohGGApi.getPlayerUnitFromUnits(player, 'Darth Vader')), false);
+        assert.strictEqual(SwgohGGApi.SwgohGGApi.isGL(SwgohGGApi.SwgohGGApi.getPlayerUnitFromUnits(player, 'Supreme Leader Kylo Ren')), true);
+    });
+
+    it('getSummaryData', () => {
+        const player = require('./player.973246862.json');
+        const playerStats = SwgohGGApi.SwgohGGApi.getSummaryData(player);
+
+        assert.strictEqual(playerStats.chars.count, playerStats.chars.levels.reduce((accumulator, currentValue) => accumulator + currentValue));
+        assert.strictEqual(playerStats.chars.count, playerStats.chars.rarities.reduce((accumulator, currentValue) => accumulator + currentValue));
+        assert.strictEqual(playerStats.chars.count, playerStats.chars.gear.reduce((accumulator, currentValue) => accumulator + currentValue));
+        assert.strictEqual(playerStats.chars.galacticLegendCount, 1);
+        assert.strictEqual(playerStats.chars.count, SwgohGGApi.SwgohGGApi.getCharacterCount(player));
+
+        assert.strictEqual(playerStats.ships.count, playerStats.ships.levels.reduce((accumulator, currentValue) => accumulator + currentValue));
+        assert.strictEqual(playerStats.ships.count, playerStats.ships.rarities.reduce((accumulator, currentValue) => accumulator + currentValue));
+        assert.strictEqual(playerStats.ships.count, SwgohGGApi.SwgohGGApi.getShipCount(player));
     });
 
     it('getAbilityTypeDescription', () => {
@@ -202,6 +204,22 @@ describe('Local cache', () => {
         assert.strictEqual(api.getCharacter('VADER').base_id, 'VADER');
     });
 
+    it('getShip', () => {
+        assert.strictEqual(api.getShip('DUMMY'), undefined);
+        assert.strictEqual(api.getShip('CAPITALCHIMAERA').base_id, 'CAPITALCHIMAERA');
+    });
+ 
+    it('getAbility', () => {
+        assert.strictEqual(api.getAbility('DUMMY'), undefined);
+        assert.strictEqual(api.getAbility('leaderskill_VADER').base_id, 'leaderskill_VADER');
+    });
+
+    it('getGear', () => {
+        assert.strictEqual(api.getGear('DUMMY'), undefined);
+        assert.strictEqual(api.getGear('126').base_id, '126');
+        assert.strictEqual(api.getGear('126').name, 'Mk 6 Nubian Design Tech');
+    });
+
     it('findCharacter', () => {
         // not found
         assert.strictEqual(api.findCharacter('DUMMY'), undefined);
@@ -213,20 +231,15 @@ describe('Local cache', () => {
         assert.strictEqual(api.findCharacter('Alpha').base_id, 'GEONOSIANBROODALPHA');
     });
 
-    it('getShip', () => {
-        assert.strictEqual(api.getShip('DUMMY'), undefined);
-        assert.strictEqual(api.getShip('CAPITALCHIMAERA').base_id, 'CAPITALCHIMAERA');
-    });
-
-    it('getAbility', () => {
-        assert.strictEqual(api.getAbility('DUMMY'), undefined);
-        assert.strictEqual(api.getAbility('leaderskill_VADER').base_id, 'leaderskill_VADER');
-    });
-
-    it('getGear', () => {
-        assert.strictEqual(api.getGear('DUMMY'), undefined);
-        assert.strictEqual(api.getGear('126').base_id, '126');
-        assert.strictEqual(api.getGear('126').name, 'Mk 6 Nubian Design Tech');
+    it('findShip', () => {
+        // not found
+        assert.strictEqual(api.findShip('DUMMY'), undefined);
+        // acronym
+        assert.strictEqual(api.findShip('H1').base_id, 'CAPITALMONCALAMARICRUISER');
+        // full name
+        assert.strictEqual(api.findShip('Chimaera').base_id, 'CAPITALCHIMAERA');
+        // partial name
+        assert.strictEqual(api.findShip('Tooth').base_id, 'HOUNDSTOOTH');
     });
 });
 
