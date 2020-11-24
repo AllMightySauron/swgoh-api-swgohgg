@@ -5,6 +5,7 @@ const assert = require('assert');
 
 // default api object
 const config = require('../config.json');
+const { AbilityTypeEnum } = require('../swgohgg-api');
 const api = new SwgohGGApi.SwgohGGApi(config.user, config.password);
 
 describe('Static methods', () => {
@@ -38,12 +39,13 @@ describe('Static methods', () => {
     });
 
     it('getSummaryData', () => {
-        const player = api.getPlayer('232669733');
+        const player = api.getPlayer('973246862');
         const playerStats = SwgohGGApi.SwgohGGApi.getSummaryData(player);
 
         assert.strictEqual(playerStats.chars.count, playerStats.chars.levels.reduce((accumulator, currentValue) => accumulator + currentValue));
         assert.strictEqual(playerStats.chars.count, playerStats.chars.rarities.reduce((accumulator, currentValue) => accumulator + currentValue));
         assert.strictEqual(playerStats.chars.count, playerStats.chars.gear.reduce((accumulator, currentValue) => accumulator + currentValue));
+        assert.strictEqual(playerStats.chars.galacticLegendCount > 0, true);
         assert.strictEqual(playerStats.chars.count, SwgohGGApi.SwgohGGApi.getCharacterCount(player));
 
         assert.strictEqual(playerStats.ships.count, playerStats.ships.levels.reduce((accumulator, currentValue) => accumulator + currentValue));
@@ -61,6 +63,15 @@ describe('Static methods', () => {
         const ship = SwgohGGApi.SwgohGGApi.getPlayerUnitFromUnits(player, 'Chimaera');
         assert.strictEqual(ship.name, 'Chimaera');
         assert.strictEqual(ship.base_id, 'CAPITALCHIMAERA');
+    });
+
+    it('getAbilityTypeDescription', () => {
+        assert.strictEqual(SwgohGGApi.SwgohGGApi.getAbilityTypeDescription(AbilityTypeEnum.AbilityTypeBasic), 'Basic');
+        assert.strictEqual(SwgohGGApi.SwgohGGApi.getAbilityTypeDescription(AbilityTypeEnum.AbilityTypeCrew), 'Crew');
+        assert.strictEqual(SwgohGGApi.SwgohGGApi.getAbilityTypeDescription(AbilityTypeEnum.AbilityTypeLeader), 'Leader');
+        assert.strictEqual(SwgohGGApi.SwgohGGApi.getAbilityTypeDescription(AbilityTypeEnum.AbilityTypeSpecial), 'Special');
+        assert.strictEqual(SwgohGGApi.SwgohGGApi.getAbilityTypeDescription(AbilityTypeEnum.AbilityTypeUnique), 'Unique');
+        assert.strictEqual(SwgohGGApi.SwgohGGApi.getAbilityTypeDescription(9999), 'Unknown ability: 9999');
     });
 });
 

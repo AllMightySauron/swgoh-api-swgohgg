@@ -585,6 +585,29 @@ class SwgohGGApi {
     }
 
     /**
+     * Get ability type description.
+     * @static
+     * @param {AbilityTypeEnum} type Ability type enum.
+     * @returns {string} ability type description
+     */
+    static getAbilityTypeDescription(type) {
+        switch (type) {
+            case AbilityTypeEnum.AbilityTypeBasic:
+                return "Basic";
+            case AbilityTypeEnum.AbilityTypeSpecial: 
+                return "Special";
+            case AbilityTypeEnum.AbilityTypeLeader:
+                return "Leader";
+            case AbilityTypeEnum.AbilityTypeUnique:
+                return "Unique";
+            case AbilityTypeEnum.AbilityTypeCrew:
+                return "Crew";
+            default:
+                return `Unknown ability: ${type}`;
+        }
+    }
+
+    /**
      * Sets debug mode.
      * @param {boolean} debug Whether to generate debug log to console (defaults to true).
      * @returns {SwgohGGApi} This api instance.
@@ -940,28 +963,6 @@ class SwgohGGApi {
         this.buildCache();
 
         return this.cache.abilities.get(baseId);
-    }
-
-    /**
-     * Get ability type description.
-     * @param {AbilityTypeEnum} abilityType Ability type enum.
-     * @returns {string} ability type description
-     */
-    getAbilityTypeDescription(abilityType) {
-        switch (abilityType) {
-            case AbilityTypeEnum.AbilityTypeBasic:
-                return "Basic";
-            case AbilityTypeEnum.AbilityTypeSpecial: 
-                return "Special";
-            case AbilityTypeEnum.AbilityTypeLeader:
-                return "Leader";
-            case AbilityTypeEnum.AbilityTypeUnique:
-                return "Unique";
-            case AbilityTypeEnum.AbilityTypeCrew:
-                return "Crew";
-            default:
-                return `Unknown ability: ${abilityType}`;
-        }
     }
 
     /**
