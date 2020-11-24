@@ -82,17 +82,6 @@ describe('Base methods', () => {
         const config = require('../config.json');
         const api = new SwgohGGApi.SwgohGGApi(config.user, config.password);
     });
-
-    it('setDebug/getDebug', () => {
-        const config = require('../config.json');
-        const api = new SwgohGGApi.SwgohGGApi(config.user, config.password);
-
-        // defaults to false
-        assert.strictEqual(api.isDebug(), false);
-
-        api.setDebug(true);
-        assert.strictEqual(api.isDebug(), true);
-    });
 });
 
 describe ('API foundation', () => {

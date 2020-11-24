@@ -378,12 +378,17 @@ class SwgohGGApi {
      * Class constructor.
      * @param {string} user The authentication user.
      * @param {string} password The authentication password.
-     * @param {boolean} debug Whether to log debug information to the console (defaults to false).
      */
-    constructor (user, password, debug = false) {
+    constructor (user, password) {
+        const log4js = require("log4js");
+
+        const loggerConfig = require('./log4jsconf.json');
+        log4js.configure(loggerConfig);
+
+        this.logger = log4js.getLogger();
+
         this.urlBase = 'https://swgoh.gg';
         this.token = SwgohGGApi.getToken(user, password);
-        this.debug = debug;
 
         // load character acronyms from file
         const ACRONYMS_FILE = module.path ? module.path + '/resources/toon_acronyms.json' : 'resources/toon_acronyms.json';
@@ -408,7 +413,7 @@ class SwgohGGApi {
      * @returns {Map<string, string>} Acronyms map between acronym and full unit name.
      */
     static loadAcronyms(fileName) {
-        if (this.debug) console.log(`loadAcronyms@swgohgg-api: Loading acronyms from ${fileName}`);
+        if (this.logger) this.logger.info(`loadAcronyms@swgohgg-api: Loading acronyms from ${fileName}`);
 
         // file system access module
         const fs = require('fs');
@@ -423,7 +428,7 @@ class SwgohGGApi {
             acronyms.set(acronym.acronym, acronym.name);
         });
 
-        if (this.debug) console.log(`loadAcronyms@swgohgg-api: loaded acronyms OK (total = ${tempAcronyms.length})`);
+        if (this.logger) this.logger.info(`loadAcronyms@swgohgg-api: loaded acronyms OK (total = ${tempAcronyms.length})`);
 
         return acronyms;
     }
@@ -436,7 +441,7 @@ class SwgohGGApi {
      * @returns {number} The number of owned characters derived from player data.
      */
     static getUnitTypeCount (player, type) {
-        if (this.debug) console.log(`getUnitTypeCount@swgohgg-api: count request for ally code "${player.data.ally_code}" and type "${type}"`);
+        if (this.logger) this.logger.debug(`getUnitTypeCount@swgohgg-api: count request for ally code "${player.data.ally_code}" and type "${type}"`);
 
         var result = 0;
 
@@ -608,25 +613,6 @@ class SwgohGGApi {
     }
 
     /**
-     * Sets debug mode.
-     * @param {boolean} debug Whether to generate debug log to console (defaults to true).
-     * @returns {SwgohGGApi} This api instance.
-     */
-    setDebug(debug = true) {
-        this.debug = debug;
-
-        return this;
-    }
-
-    /**
-     * Gets instance debug mode.
-     * @returns {boolean} Whether to generate debug log to console.
-     */
-    isDebug() {
-        return this.debug;
-    }
-
-    /**
      * Fetch REST data using XMLHttpRequest with auto retry.
      * @param {string} method String with desired method (GET or POST).
      * @param {string} url Endpoint URL.
@@ -635,7 +621,7 @@ class SwgohGGApi {
      * @returns {XMLHttpRequest} The XMLHttpRequest object.
      */
     fetchRetry(method, url, payload, maxRetries) {
-        if (this.debug) console.log(`fetchRetry@swgohgg-api: ${method}(t)ing data from "${url}"`);
+        if (this.logger) this.logger.debug(`fetchRetry@swgohgg-api: ${method}(t)ing data from "${url}"`);
 
         const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
         var xhr = new XMLHttpRequest();
@@ -657,7 +643,7 @@ class SwgohGGApi {
 
             // bearer token expired?
             if (xhr.readyState == xhr.DONE && xhr.status >= 500) {
-                if (this.debug) console.log(`fetchRetry@swgohgg-api: error with status ${xhr.status} (${xhr.responseText}). retrying...`);
+                if (this.logger) this.logger.error(`fetchRetry@swgohgg-api: error with status ${xhr.status} (${xhr.responseText}). retrying...`);
 
                 // retry send
                 return this.fetchRetry(method, url, payload, maxRetries - 1);
@@ -692,7 +678,7 @@ class SwgohGGApi {
         const now = new Date();
 
         if (!this.cache) {
-            if (this.debug) console.log('buildCache@swgohgg-api: No cache found, fetching new cache data');
+            if (this.logger) this.logger.debug('buildCache@swgohgg-api: No cache found, fetching new cache data');
 
             // build cache object
             this.cache = {
@@ -703,7 +689,7 @@ class SwgohGGApi {
                 updated: new Date()
             };
         } else if (now.getTime() - this.cache.updated.getTime() > MAX_TTL_SECONDS * 1000) {
-            if (this.debug) console.log('buildCache@swgohgg-api: Cache TTL exceeded, rebuilding cache');
+            if (this.logger) this.logger.debug('buildCache@swgohgg-api: Cache TTL exceeded, rebuilding cache');
 
             // ttl exceeded, let's rebuild cache
             this.cache = undefined;
@@ -718,7 +704,7 @@ class SwgohGGApi {
      * @returns {Map<string, CharacterData>} Map between character base_id and the character data.
      */
     fetchCharacters() {
-        if (this.debug) console.log('fetchCaracters@swgohgg-api: fetching character data from swgoh.gg');
+        if (this.logger) this.logger.debug('fetchCaracters@swgohgg-api: fetching character data from swgoh.gg');
 
         var result;
 
@@ -736,7 +722,7 @@ class SwgohGGApi {
             
             
         } else {
-            console.log(`fetchCaracters@swgohgg-api: API error loading characters (ready state = ${xhr.readyState}, status = ${xhr.status})`);
+            this.logger.error(`fetchCaracters@swgohgg-api: API error loading characters (ready state = ${xhr.readyState}, status = ${xhr.status})`);
         }
 
         return result;
@@ -746,7 +732,7 @@ class SwgohGGApi {
      * Load all ships from SWGOH.GG database using the /api/ships api.
      */
     fetchShips() {
-        if (this.debug) console.log('fetchShips@swgohgg-api: fetching ship data from swgoh.gg');
+        if (this.logger) this.logger.debug('fetchShips@swgohgg-api: fetching ship data from swgoh.gg');
 
         var result;
 
@@ -764,7 +750,7 @@ class SwgohGGApi {
             
             
         } else {
-            console.log(`fetchShips@swgohgg-api: API error loading ships (ready state = ${xhr.readyState}, status = ${xhr.status})`);
+            this.logger.error(`fetchShips@swgohgg-api: API error loading ships (ready state = ${xhr.readyState}, status = ${xhr.status})`);
         }
 
         return result;
@@ -776,7 +762,7 @@ class SwgohGGApi {
      * @returns {Max<string, AbilityData>} Map between the ability id and the corresponding ability data.
      */
     fetchAbilities() {
-        if (this.debug) console.log('fetchAbilities@swgohgg-api: fetching ability data from swgoh.gg');
+        if (this.logger) this.logger.debug('fetchAbilities@swgohgg-api: fetching ability data from swgoh.gg');
 
         var result;
 
@@ -795,7 +781,7 @@ class SwgohGGApi {
                 result.set(ability.base_id, ability);
             });
         } else {
-            console.log(`fetchAbilities@swgohgg-api: API error loading abilities (ready state = ${xhr.readyState}, status = ${xhr.status})`);
+            this.logger.error(`fetchAbilities@swgohgg-api: API error loading abilities (ready state = ${xhr.readyState}, status = ${xhr.status})`);
         }
 
         return result;
@@ -807,7 +793,7 @@ class SwgohGGApi {
      * @returns {Map<string, Gear>} Map between the gear base id and its corresponding data.
      */
     fetchGear() {
-        if (this.debug) console.log('fetchGear@swgohgg-api: fetching gear data from swgoh.gg');
+        if (this.logger) this.logger.debug('fetchGear@swgohgg-api: fetching gear data from swgoh.gg');
 
         var result;
 
@@ -826,7 +812,7 @@ class SwgohGGApi {
                 result.set(gear.base_id, gear);
             });
         } else {
-            console.log(`fetchGear@swgohgg-api: API error loading gears (ready state = ${xhr.readyState}, status = ${xhr.status})`);
+            this.logger.error(`fetchGear@swgohgg-api: API error loading gears (ready state = ${xhr.readyState}, status = ${xhr.status})`);
         }
 
         return result;
@@ -860,7 +846,7 @@ class SwgohGGApi {
      * @returns {CharacterData} The character data.
      */
     findCharacter(name) {
-        if (this.debug) console.log(`findCaracter@swgohgg-api: searching cache for character "${name}"`);
+        if (this.logger) this.logger.debug(`findCaracter@swgohgg-api: searching cache for character "${name}"`);
 
         var result;
 
@@ -874,14 +860,14 @@ class SwgohGGApi {
             // set new search name to acronym mapping
             searchName = this.acronyms.get(searchName).toLowerCase();
 
-            if (this.debug) console.log(`findCharacter@swgohgg-api: mapped "${name}" to "${searchName}"`);
+            if (this.logger) this.logger.debug(`findCharacter@swgohgg-api: mapped "${name}" to "${searchName}"`);
         }
 
         // search for full unit name from cache
         result = Array.from(this.cache.characters.values()).find(char => char.name.toLowerCase() == searchName);
 
         if (result) {
-            if (this.debug) console.log(`findCharacter@swgohgg-api: full name matched to id "${result.base_id}" (${result.name})`);
+            if (this.logger) this.logger.debug(`findCharacter@swgohgg-api: full name matched to id "${result.base_id}" (${result.name})`);
         } else {
             // not found: try substring
 
@@ -895,7 +881,7 @@ class SwgohGGApi {
                 if (character.name.toLowerCase().includes(searchName)) {
                     result = character;
 
-                    if (this.debug) console.log(`findCharacter@swgohgg-api: partial name matched to id "${result.base_id}" (${result.name})`);
+                    if (this.logger) this.logger.debug(`findCharacter@swgohgg-api: partial name matched to id "${result.base_id}" (${result.name})`);
                     break;
                 }
             }
@@ -910,7 +896,7 @@ class SwgohGGApi {
      * @returns {ShipData} The ship data.
      */
     findShip(name) {
-        if (this.debug) console.log(`findShip@swgohgg-api: searching cache for ship "${name}"`);
+        if (this.logger) this.logger.debug(`findShip@swgohgg-api: searching cache for ship "${name}"`);
 
         var result;
 
@@ -924,14 +910,14 @@ class SwgohGGApi {
             // set new search name to acronym mapping
             searchName = this.acronyms.get(searchName).toLowerCase();
 
-            if (this.debug) console.log(`findShip@swgohgg-api: mapped "${name}" to "${searchName}"`);
+            if (this.logger) this.logger.debug(`findShip@swgohgg-api: mapped "${name}" to "${searchName}"`);
         }
 
         // search for full unit name from cache
         result = Array.from(this.cache.ships.values()).find(ship => ship.name.toLowerCase() == searchName);
 
         if (result) {
-            if (this.debug) console.log(`findShip@swgohgg-api: full name matched to id "${result.base_id}" (${result.name})`);
+            if (this.logger) this.logger.debug(`findShip@swgohgg-api: full name matched to id "${result.base_id}" (${result.name})`);
         } else {
             // not found: try substring
 
@@ -945,7 +931,7 @@ class SwgohGGApi {
                 if (ship.name.toLowerCase().includes(searchName)) {
                     result = ship;
 
-                    if (this.debug) console.log(`findShip@swgohgg-api: partial name matched to id "${result.base_id}" (${result.name})`);
+                    if (this.logger) this.logger.debug(`findShip@swgohgg-api: partial name matched to id "${result.base_id}" (${result.name})`);
                     break;
                 }
             }
@@ -982,7 +968,7 @@ class SwgohGGApi {
      * @returns {Player} Player data object.
      */
     getPlayer(allyCode) {
-        if (this.debug) console.log(`getPlayer@swgohgg-api: data request for ally code "${allyCode}"`);
+        if (this.logger) this.logger.debug(`getPlayer@swgohgg-api: data request for ally code "${allyCode}"`);
 
          // get user info from swgoh.gg
          const xhr = this.fetch('GET', `${this.urlBase}/api/player/${allyCode}/`);
@@ -993,7 +979,7 @@ class SwgohGGApi {
          if (xhr.readyState == xhr.DONE && xhr.status == 200) {
              Player = JSON.parse(xhr.responseText);
          } else {
-            console.log(`getPlayer@swgoh.gg: API error loading player for ally code "${allyCode}" (ready state = ${xhr.readyState}, status = ${xhr.status})`);
+            this.logger.error(`getPlayer@swgoh.gg: API error loading player for ally code "${allyCode}" (ready state = ${xhr.readyState}, status = ${xhr.status})`);
          }
 
          return Player;
@@ -1005,21 +991,21 @@ class SwgohGGApi {
      * @returns {Guild} The guild data.
      */
     getGuild(guildId) {
-        if (this.debug) console.log(`getGuild@swgohgg-api: data request for guild id "${guildId}"`);
+        if (this.logger) this.logger.debug(`getGuild@swgohgg-api: data request for guild id "${guildId}"`);
 
         // get guild data from swgoh.gg
         const xhr = this.fetch('GET', `${this.urlBase}/api/guild/${guildId}/`);
 
         /** @type {Guild} */
-        var Guild;
+        var guild;
 
         if (xhr.readyState == xhr.DONE && xhr.status == 200) {
-            Guild = JSON.parse(xhr.responseText);
+            guild = JSON.parse(xhr.responseText);
         } else {
-           console.log(`getGuild@swgoh.gg: API error loading guild data for guild id "${guildId}" (ready state = ${xhr.readyState}, status = ${xhr.status})`);
+            this.logger.error(`getGuild@swgoh.gg: API error loading guild data for guild id "${guildId}" (ready state = ${xhr.readyState}, status = ${xhr.status})`);
         }
 
-        return Guild;
+        return guild;
     }
 
     /**
@@ -1029,7 +1015,7 @@ class SwgohGGApi {
      * @return {UnitDetail} Unit data.
      */
     getPlayerUnit(allyCode, name) {
-        if (this.debug) console.log(`getPlayerCharacter@swgohgg-api: data request for ally code ${allyCode} and unit "${name}"`);
+        if (this.logger) this.logger.debug(`getPlayerCharacter@swgohgg-api: data request for ally code ${allyCode} and unit "${name}"`);
 
         var result;
 
@@ -1058,7 +1044,7 @@ class SwgohGGApi {
      * @returns {PlayerMods} Array of player mods. 
      */
     getPlayerMods(allyCode) {
-        if (this.debug) console.log(`getPlayerMods@swgohgg-api: data request for ally code "${allyCode}"`);
+        if (this.logger) this.logger.debug(`getPlayerMods@swgohgg-api: data request for ally code "${allyCode}"`);
 
         // get user info from swgoh.gg
         const xhr = this.fetch('GET', `${this.urlBase}/api/players/${allyCode}/mods/`);
@@ -1069,7 +1055,7 @@ class SwgohGGApi {
             // get player data from function
             playerMods = JSON.parse(xhr.responseText);
         } else {
-           console.log(`getPlayerMods@swgohgg-api: API error loading player for ally code "${allyCode}" (ready state = ${xhr.readyState}, status = ${xhr.status})`);
+            this.logger.error(`getPlayerMods@swgohgg-api: API error loading player for ally code "${allyCode}" (ready state = ${xhr.readyState}, status = ${xhr.status})`);
         }
 
         return playerMods;
