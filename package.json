@@ -1,6 +1,6 @@
 {
   "name": "swgoh-api-swgohgg",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "SWGoH helper API for swgoh.gg",
   "main": "index.js",
   "keywords": [
@@ -11,7 +11,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/AllMightySauron/ascii-table3"
+    "url": "git://github.com/AllMightySauron/swgoh-api-swgohgg"
   },
   "contributors": [
     {
