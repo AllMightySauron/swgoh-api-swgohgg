@@ -575,16 +575,9 @@ class SwgohGGApi {
     static getPlayerUnitFromUnits(player, searchName) {
         var result;
 
-        // loop over characters
-        for (var i = 0; i < player.units.length; i++) {
-            const unit = player.units[i].data;
+        const playerUnit = player.units.find(unit => unit.data.name.toLowerCase() == searchName.toLowerCase());
 
-            // test for name (ignoring case)
-            if (unit.name.toLowerCase() == searchName.toLowerCase()) {
-                result = unit;
-                break;
-            }
-        }
+        if (playerUnit) result = playerUnit.data;
 
         return result;
     }
