@@ -413,8 +413,6 @@ class SwgohGGApi {
      * @returns {Map<string, string>} Acronyms map between acronym and full unit name.
      */
     static loadAcronyms(fileName) {
-        if (this.logger) this.logger.info(`loadAcronyms@swgohgg-api: Loading acronyms from ${fileName}`);
-
         // file system access module
         const fs = require('fs');
 
@@ -428,8 +426,6 @@ class SwgohGGApi {
             acronyms.set(acronym.acronym, acronym.name);
         });
 
-        if (this.logger) this.logger.info(`loadAcronyms@swgohgg-api: loaded acronyms OK (total = ${tempAcronyms.length})`);
-
         return acronyms;
     }
 
@@ -441,21 +437,7 @@ class SwgohGGApi {
      * @returns {number} The number of owned characters derived from player data.
      */
     static getUnitTypeCount (player, type) {
-        if (this.logger) this.logger.debug(`getUnitTypeCount@swgohgg-api: count request for ally code "${player.data.ally_code}" and type "${type}"`);
-
-        var result = 0;
-
-        // loop over units
-        for(var i = 0; i < player.units.length; i++) {
-            /** @type {UnitDetail} */
-            const unit = player.units[i].data;
-
-            // test for characters
-            if (unit.combat_type == type)
-                result++;
-        }
-
-        return result;
+        return player.units.filter(unit => unit.data.combat_type == type).length;
     }
 
     /**
@@ -485,20 +467,7 @@ class SwgohGGApi {
      * @returns {boolean} Whether this unit is a GL.
      */
     static isGL(unit) {
-        var result = false;
-
-        // loop over zeta abilities
-        for (var i = 0; i < unit.zeta_abilities.length; i++) {
-            const abilityName = unit.zeta_abilities[i];
-
-            // check for the galatic legend ability
-            if (abilityName.includes('GALACTICLEGEND')) {
-                result = true;
-                break;
-            }
-        }
-
-        return result;
+        return unit.zeta_abilities.filter(abilityName => abilityName.includes('GALACTICLEGEND')).length > 0;
     }
 
     /**
@@ -507,7 +476,7 @@ class SwgohGGApi {
      * @param {Player} player The player data.
      * @returns {PlayerStats} Object with summarized player data.
      */
-    static getSummaryData(player) {
+    static getPlayerStatsSummary(player) {
         /** @type {PlayerStats} */
         var result = { 
             chars: {
@@ -535,7 +504,7 @@ class SwgohGGApi {
                 result.chars.count++;
 
                 // test for GL
-                if (this.isGL(unit.data)) {
+                if (SwgohGGApi.isGL(unit.data)) {
                     result.chars.galacticLegendCount++;
                 }
 

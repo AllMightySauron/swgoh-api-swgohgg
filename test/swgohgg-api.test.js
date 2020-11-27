@@ -1,21 +1,20 @@
 /*jshint esversion: 6 */
 
-const SwgohGGApi = require('../swgohgg-api');
+const { SwgohGGApi, AbilityTypeEnum, CombatTypeEnum } = require('../swgohgg-api');
 const assert = require('assert');
 
 // default api object
 const config = require('../config.json');
-const { AbilityTypeEnum } = require('../swgohgg-api');
-const api = new SwgohGGApi.SwgohGGApi(config.user, config.password);
+const api = new SwgohGGApi(config.user, config.password);
 
 describe('Static methods', () => {
     it('getToken', () => {
-        assert.strictEqual(SwgohGGApi.SwgohGGApi.getToken('user', 'password'), 'dXNlcjpwYXNzd29yZA==');
+        assert.strictEqual(SwgohGGApi.getToken('user', 'password'), 'dXNlcjpwYXNzd29yZA==');
     });
 
     it ('loadAcronyms', () => {
         /** @type {Map<string, string>} */
-        const acronyms = SwgohGGApi.SwgohGGApi.loadAcronyms('./resources/toon_acronyms.json');
+        const acronyms = SwgohGGApi.loadAcronyms('./resources/toon_acronyms.json');
 
         assert.strictEqual(typeof acronyms, "object");
         assert.strictEqual(acronyms.size > 0, true);
@@ -24,23 +23,23 @@ describe('Static methods', () => {
     it ('getUnitTypeCount/getCharacterCount/getShipCount', () => {
         const player = require('./player.232669733.json');
 
-        assert.strictEqual(SwgohGGApi.SwgohGGApi.getUnitTypeCount(player, SwgohGGApi.CombatTypeEnum.CombatTypeChar) + 
-                           SwgohGGApi.SwgohGGApi.getUnitTypeCount(player, SwgohGGApi.CombatTypeEnum.CombatTypeShip),
+        assert.strictEqual(SwgohGGApi.getUnitTypeCount(player, CombatTypeEnum.CombatTypeChar) + 
+                           SwgohGGApi.getUnitTypeCount(player, CombatTypeEnum.CombatTypeShip),
                            player.units.length);
-        assert.strictEqual(SwgohGGApi.SwgohGGApi.getUnitTypeCount(player, SwgohGGApi.CombatTypeEnum.CombatTypeChar), 
-                           SwgohGGApi.SwgohGGApi.getCharacterCount(player));
-        assert.strictEqual(SwgohGGApi.SwgohGGApi.getUnitTypeCount(player, SwgohGGApi.CombatTypeEnum.CombatTypeShip), 
-                           SwgohGGApi.SwgohGGApi.getShipCount(player));
+        assert.strictEqual(SwgohGGApi.getUnitTypeCount(player, CombatTypeEnum.CombatTypeChar), 
+                           SwgohGGApi.getCharacterCount(player));
+        assert.strictEqual(SwgohGGApi.getUnitTypeCount(player, CombatTypeEnum.CombatTypeShip), 
+                           SwgohGGApi.getShipCount(player));
     });
 
     it('getPlayerUnitFromUnits', () => {
         const player = require('./player.232669733.json');
 
-        const char = SwgohGGApi.SwgohGGApi.getPlayerUnitFromUnits(player, 'Darth Vader');
+        const char = SwgohGGApi.getPlayerUnitFromUnits(player, 'Darth Vader');
         assert.strictEqual(char.name, 'Darth Vader');
         assert.strictEqual(char.base_id, 'VADER');
 
-        const ship = SwgohGGApi.SwgohGGApi.getPlayerUnitFromUnits(player, 'Chimaera');
+        const ship = SwgohGGApi.getPlayerUnitFromUnits(player, 'Chimaera');
         assert.strictEqual(ship.name, 'Chimaera');
         assert.strictEqual(ship.base_id, 'CAPITALCHIMAERA');
     });
@@ -48,39 +47,39 @@ describe('Static methods', () => {
     it('isGL', () => {
         const player = require('./player.973246862.json');
 
-        assert.strictEqual(SwgohGGApi.SwgohGGApi.isGL(SwgohGGApi.SwgohGGApi.getPlayerUnitFromUnits(player, 'Darth Vader')), false);
-        assert.strictEqual(SwgohGGApi.SwgohGGApi.isGL(SwgohGGApi.SwgohGGApi.getPlayerUnitFromUnits(player, 'Supreme Leader Kylo Ren')), true);
+        assert.strictEqual(SwgohGGApi.isGL(SwgohGGApi.getPlayerUnitFromUnits(player, 'Darth Vader')), false);
+        assert.strictEqual(SwgohGGApi.isGL(SwgohGGApi.getPlayerUnitFromUnits(player, 'Supreme Leader Kylo Ren')), true);
     });
 
-    it('getSummaryData', () => {
+    it('getPlayerStatsSummary', () => {
         const player = require('./player.973246862.json');
-        const playerStats = SwgohGGApi.SwgohGGApi.getSummaryData(player);
+        const playerStats = SwgohGGApi.getPlayerStatsSummary(player);
 
         assert.strictEqual(playerStats.chars.count, playerStats.chars.levels.reduce((accumulator, currentValue) => accumulator + currentValue));
         assert.strictEqual(playerStats.chars.count, playerStats.chars.rarities.reduce((accumulator, currentValue) => accumulator + currentValue));
         assert.strictEqual(playerStats.chars.count, playerStats.chars.gear.reduce((accumulator, currentValue) => accumulator + currentValue));
         assert.strictEqual(playerStats.chars.galacticLegendCount, 1);
-        assert.strictEqual(playerStats.chars.count, SwgohGGApi.SwgohGGApi.getCharacterCount(player));
+        assert.strictEqual(playerStats.chars.count, SwgohGGApi.getCharacterCount(player));
 
         assert.strictEqual(playerStats.ships.count, playerStats.ships.levels.reduce((accumulator, currentValue) => accumulator + currentValue));
         assert.strictEqual(playerStats.ships.count, playerStats.ships.rarities.reduce((accumulator, currentValue) => accumulator + currentValue));
-        assert.strictEqual(playerStats.ships.count, SwgohGGApi.SwgohGGApi.getShipCount(player));
+        assert.strictEqual(playerStats.ships.count, SwgohGGApi.getShipCount(player));
     });
 
     it('getAbilityTypeDescription', () => {
-        assert.strictEqual(SwgohGGApi.SwgohGGApi.getAbilityTypeDescription(AbilityTypeEnum.AbilityTypeBasic), 'Basic');
-        assert.strictEqual(SwgohGGApi.SwgohGGApi.getAbilityTypeDescription(AbilityTypeEnum.AbilityTypeCrew), 'Crew');
-        assert.strictEqual(SwgohGGApi.SwgohGGApi.getAbilityTypeDescription(AbilityTypeEnum.AbilityTypeLeader), 'Leader');
-        assert.strictEqual(SwgohGGApi.SwgohGGApi.getAbilityTypeDescription(AbilityTypeEnum.AbilityTypeSpecial), 'Special');
-        assert.strictEqual(SwgohGGApi.SwgohGGApi.getAbilityTypeDescription(AbilityTypeEnum.AbilityTypeUnique), 'Unique');
-        assert.strictEqual(SwgohGGApi.SwgohGGApi.getAbilityTypeDescription(9999), 'Unknown ability: 9999');
+        assert.strictEqual(SwgohGGApi.getAbilityTypeDescription(AbilityTypeEnum.AbilityTypeBasic), 'Basic');
+        assert.strictEqual(SwgohGGApi.getAbilityTypeDescription(AbilityTypeEnum.AbilityTypeCrew), 'Crew');
+        assert.strictEqual(SwgohGGApi.getAbilityTypeDescription(AbilityTypeEnum.AbilityTypeLeader), 'Leader');
+        assert.strictEqual(SwgohGGApi.getAbilityTypeDescription(AbilityTypeEnum.AbilityTypeSpecial), 'Special');
+        assert.strictEqual(SwgohGGApi.getAbilityTypeDescription(AbilityTypeEnum.AbilityTypeUnique), 'Unique');
+        assert.strictEqual(SwgohGGApi.getAbilityTypeDescription(9999), 'Unknown ability: 9999');
     });
 });
 
 describe('Base methods', () => {
     it('Constructor', () => {
         const config = require('../config.json');
-        const api = new SwgohGGApi.SwgohGGApi(config.user, config.password);
+        const api = new SwgohGGApi(config.user, config.password);
     });
 });
 
@@ -88,7 +87,7 @@ describe ('API foundation', () => {
 
     it('fetchRetry(GET)', () => {
         const config = require('../config.json');
-        const api = new SwgohGGApi.SwgohGGApi(config.user, config.password);
+        const api = new SwgohGGApi(config.user, config.password);
 
         const reply = api.fetchRetry('GET', 'https://postman-echo.com/get?foo1=bar1&foo2=bar2', undefined, 3);
 
@@ -100,7 +99,7 @@ describe ('API foundation', () => {
 
     it('fetchRetry(POST)', () => {
         const config = require('../config.json');
-        const api = new SwgohGGApi.SwgohGGApi(config.user, config.password);
+        const api = new SwgohGGApi(config.user, config.password);
 
         const reply = api.fetchRetry('POST', 'https://postman-echo.com/post?hand=wave', undefined, 3);
 
@@ -111,7 +110,7 @@ describe ('API foundation', () => {
 
     it('fetchRetry(POST payload)', () => {
         const config = require('../config.json');
-        const api = new SwgohGGApi.SwgohGGApi(config.user, config.password);
+        const api = new SwgohGGApi(config.user, config.password);
 
         const reply = api.fetchRetry('POST', 'https://postman-echo.com/post', { id: 10, name: 'John' }, 3);
 
@@ -125,7 +124,7 @@ describe ('API foundation', () => {
 describe('Local cache', () => {
     it('fetchCharacters', () => {
         const config = require('../config.json');
-        const api = new SwgohGGApi.SwgohGGApi(config.user, config.password);
+        const api = new SwgohGGApi(config.user, config.password);
 
         const chars = api.fetchCharacters();
     
@@ -136,7 +135,7 @@ describe('Local cache', () => {
 
     it('fetchShips', () => {
         const config = require('../config.json');
-        const api = new SwgohGGApi.SwgohGGApi(config.user, config.password);
+        const api = new SwgohGGApi(config.user, config.password);
 
         const ships = api.fetchShips();
     
@@ -147,7 +146,7 @@ describe('Local cache', () => {
 
     it('fetchAbilities', () => {
         const config = require('../config.json');
-        const api = new SwgohGGApi.SwgohGGApi(config.user, config.password);
+        const api = new SwgohGGApi(config.user, config.password);
 
         const abilities = api.fetchAbilities();
     
@@ -158,7 +157,7 @@ describe('Local cache', () => {
 
     it('fetchGear', () => {
         const config = require('../config.json');
-        const api = new SwgohGGApi.SwgohGGApi(config.user, config.password);
+        const api = new SwgohGGApi(config.user, config.password);
 
         const gear = api.fetchGear();
     
@@ -171,7 +170,7 @@ describe('Local cache', () => {
 
     it ('buildCache', () => {
         const config = require('../config.json');
-        const api = new SwgohGGApi.SwgohGGApi(config.user, config.password);
+        const api = new SwgohGGApi(config.user, config.password);
 
         api.buildCache();
 
