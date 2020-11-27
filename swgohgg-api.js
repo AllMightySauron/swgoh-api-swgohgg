@@ -518,7 +518,7 @@ class SwgohGGApi {
                 result.chars.gear[unit.data.gear_level - 1]++;
 
                 // increase zeta count
-                result.chars.charZetas += unit.data.zeta_abilities.length;
+                result.chars.zetas += unit.data.zeta_abilities.length;
             } else if (unit.data.combat_type == CombatTypeEnum.CombatTypeShip) {
                 // increase ship count
                 result.ships.count++;

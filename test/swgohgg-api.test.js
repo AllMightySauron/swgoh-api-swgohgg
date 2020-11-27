@@ -3,10 +3,6 @@
 const { SwgohGGApi, AbilityTypeEnum, CombatTypeEnum } = require('../swgohgg-api');
 const assert = require('assert');
 
-// default api object
-const config = require('../config.json');
-const api = new SwgohGGApi(config.user, config.password);
-
 describe('Static methods', () => {
     it('getToken', () => {
         assert.strictEqual(SwgohGGApi.getToken('user', 'password'), 'dXNlcjpwYXNzd29yZA==');
@@ -60,6 +56,7 @@ describe('Static methods', () => {
         assert.strictEqual(playerStats.chars.count, playerStats.chars.gear.reduce((accumulator, currentValue) => accumulator + currentValue));
         assert.strictEqual(playerStats.chars.galacticLegendCount, 1);
         assert.strictEqual(playerStats.chars.count, SwgohGGApi.getCharacterCount(player));
+        assert.strictEqual(playerStats.chars.zetas, 105);
 
         assert.strictEqual(playerStats.ships.count, playerStats.ships.levels.reduce((accumulator, currentValue) => accumulator + currentValue));
         assert.strictEqual(playerStats.ships.count, playerStats.ships.rarities.reduce((accumulator, currentValue) => accumulator + currentValue));
@@ -84,11 +81,10 @@ describe('Base methods', () => {
 });
 
 describe ('API foundation', () => {
+    const config = require('../config.json');
+    const api = new SwgohGGApi(config.user, config.password);
 
-    it('fetchRetry(GET)', () => {
-        const config = require('../config.json');
-        const api = new SwgohGGApi(config.user, config.password);
-
+    it('fetchRetry(GET)', () => {        
         const reply = api.fetchRetry('GET', 'https://postman-echo.com/get?foo1=bar1&foo2=bar2', undefined, 3);
 
         const jsonReply = JSON.parse(reply.responseText);
@@ -98,10 +94,7 @@ describe ('API foundation', () => {
     });
 
     it('fetchRetry(POST)', () => {
-        const config = require('../config.json');
-        const api = new SwgohGGApi(config.user, config.password);
-
-        const reply = api.fetchRetry('POST', 'https://postman-echo.com/post?hand=wave', undefined, 3);
+       const reply = api.fetchRetry('POST', 'https://postman-echo.com/post?hand=wave', undefined, 3);
 
         const jsonReply = JSON.parse(reply.responseText);
 
@@ -109,9 +102,6 @@ describe ('API foundation', () => {
     });
 
     it('fetchRetry(POST payload)', () => {
-        const config = require('../config.json');
-        const api = new SwgohGGApi(config.user, config.password);
-
         const reply = api.fetchRetry('POST', 'https://postman-echo.com/post', { id: 10, name: 'John' }, 3);
 
         const jsonReply = JSON.parse(reply.responseText);
@@ -122,10 +112,11 @@ describe ('API foundation', () => {
 });
 
 describe('Local cache', () => {
-    it('fetchCharacters', () => {
-        const config = require('../config.json');
-        const api = new SwgohGGApi(config.user, config.password);
+    // default api object
+    const config = require('../config.json');
+    const api = new SwgohGGApi(config.user, config.password);
 
+    it('fetchCharacters', () => {
         const chars = api.fetchCharacters();
     
         assert.strictEqual(chars.size > 0, true);
@@ -134,9 +125,6 @@ describe('Local cache', () => {
     });
 
     it('fetchShips', () => {
-        const config = require('../config.json');
-        const api = new SwgohGGApi(config.user, config.password);
-
         const ships = api.fetchShips();
     
         assert.strictEqual(ships.size > 0, true);
@@ -145,9 +133,6 @@ describe('Local cache', () => {
     });
 
     it('fetchAbilities', () => {
-        const config = require('../config.json');
-        const api = new SwgohGGApi(config.user, config.password);
-
         const abilities = api.fetchAbilities();
     
         assert.strictEqual(abilities.size > 0, true);
@@ -156,9 +141,6 @@ describe('Local cache', () => {
     });
 
     it('fetchGear', () => {
-        const config = require('../config.json');
-        const api = new SwgohGGApi(config.user, config.password);
-
         const gear = api.fetchGear();
     
         assert.strictEqual(gear.size > 0, true);
@@ -169,9 +151,6 @@ describe('Local cache', () => {
     });
 
     it ('buildCache', () => {
-        const config = require('../config.json');
-        const api = new SwgohGGApi(config.user, config.password);
-
         api.buildCache();
 
         assert.strictEqual(api.cache.characters.size > 0, true);
@@ -232,6 +211,9 @@ describe('Local cache', () => {
 });
 
 describe('API data', () => {
+    const config = require('../config.json');
+    const api = new SwgohGGApi(config.user, config.password);
+    
     it('getPlayer', () => {
         const player = api.getPlayer('232669733');
 
