@@ -419,12 +419,14 @@ class SwgohGGApi {
         var tempAcronyms = JSON.parse(fs.readFileSync(fileName, 'utf8'));
 
         // create new acronym map
-        const acronyms = new Map();
+        const acronyms = {
+            chars: new Map(),
+            ships: new Map()
+        };
 
-        // add entries to map
-        tempAcronyms.forEach(acronym => {
-            acronyms.set(acronym.acronym, acronym.name);
-        });
+        // add entries to maps
+        tempAcronyms.chars.forEach(acronym => acronyms.chars.set(acronym.acronym.toLowerCase(), acronym.name));
+        tempAcronyms.ships.forEach(acronym => acronyms.ships.set(acronym.acronym.toLowerCase(), acronym.name));
 
         return acronyms;
     }
@@ -818,9 +820,9 @@ class SwgohGGApi {
         var searchName = name.toLowerCase();
 
         // test for acronym
-        if (this.acronyms.has(searchName)) {
+        if (this.acronyms.chars.has(searchName)) {
             // set new search name to acronym mapping
-            searchName = this.acronyms.get(searchName).toLowerCase();
+            searchName = this.acronyms.chars.get(searchName).toLowerCase();
 
             if (this.logger) this.logger.debug(`findCharacter@swgohgg-api: mapped "${name}" to "${searchName}"`);
         }
@@ -868,9 +870,9 @@ class SwgohGGApi {
         var searchName = name.toLowerCase();
 
         // test for acronym
-        if (this.acronyms.has(searchName)) {
+        if (this.acronyms.ships.has(searchName)) {
             // set new search name to acronym mapping
-            searchName = this.acronyms.get(searchName).toLowerCase();
+            searchName = this.acronyms.ships.get(searchName).toLowerCase();
 
             if (this.logger) this.logger.debug(`findShip@swgohgg-api: mapped "${name}" to "${searchName}"`);
         }

@@ -13,7 +13,8 @@ describe('Static methods', () => {
         const acronyms = SwgohGGApi.loadAcronyms('./resources/toon_acronyms.json');
 
         assert.strictEqual(typeof acronyms, "object");
-        assert.strictEqual(acronyms.size > 0, true);
+        assert.strictEqual(acronyms.chars.size > 0, true);
+        assert.strictEqual(acronyms.ships.size > 0, true);
     });
 
     it ('getUnitTypeCount/getCharacterCount/getShipCount', () => {
