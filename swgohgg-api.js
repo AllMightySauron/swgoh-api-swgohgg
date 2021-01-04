@@ -378,14 +378,20 @@ class SwgohGGApi {
      * Class constructor.
      * @param {string} user The authentication user.
      * @param {string} password The authentication password.
+     * @param {object} logger Log4js logger (optional).
      */
-    constructor (user, password) {
-        const log4js = require("log4js");
+    constructor (user, password, logger) {
+        // setup logging
+        if (logger) {
+            this.logger = logger;
+        } else {
+            const log4js = require("log4js");
 
-        const loggerConfig = require('./log4jsconf.json');
-        log4js.configure(loggerConfig);
+            const loggerConfig = require('./log4jsconf.json');
+            log4js.configure(loggerConfig);
 
-        this.logger = log4js.getLogger();
+            this.logger = log4js.getLogger();
+        }
 
         this.urlBase = 'https://swgoh.gg';
         this.token = SwgohGGApi.getToken(user, password);
