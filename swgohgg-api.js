@@ -492,7 +492,8 @@ class SwgohGGApi {
                 galacticLegendCount: 0,
                 levels: new Array(MAX_UNIT_LEVELS).fill(0),
                 rarities: new Array(MAX_UNIT_STARS).fill(0),
-                gear:  new Array(MAX_CHAR_GEAR_LEVEL).fill(0),
+                gear: new Array(MAX_CHAR_GEAR_LEVEL).fill(0),
+                relic5Above: 0,
                 zetas: 0,
             },
             ships: {
@@ -524,6 +525,9 @@ class SwgohGGApi {
 
                 // increase gear count
                 result.chars.gear[unit.data.gear_level - 1]++;
+
+                // gear == 13 and relic >= 5 (relic 5 == 7)
+                if (unit.data.gear_level == 13 && unit.data.relic_tier >= 7) result.chars.relic5Above++;
 
                 // increase zeta count
                 result.chars.zetas += unit.data.zeta_abilities.length;

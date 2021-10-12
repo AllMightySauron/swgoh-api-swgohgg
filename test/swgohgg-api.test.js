@@ -49,15 +49,16 @@ describe('Static methods', () => {
     });
 
     it('getPlayerStatsSummary', () => {
-        const player = require('./player.973246862.json');
+        const player = require('./player.232669733.json');
         const playerStats = SwgohGGApi.getPlayerStatsSummary(player);
 
         assert.strictEqual(playerStats.chars.count, playerStats.chars.levels.reduce((accumulator, currentValue) => accumulator + currentValue));
         assert.strictEqual(playerStats.chars.count, playerStats.chars.rarities.reduce((accumulator, currentValue) => accumulator + currentValue));
         assert.strictEqual(playerStats.chars.count, playerStats.chars.gear.reduce((accumulator, currentValue) => accumulator + currentValue));
         assert.strictEqual(playerStats.chars.galacticLegendCount, 1);
+        assert.strictEqual(playerStats.chars.relic5Above, 29);
         assert.strictEqual(playerStats.chars.count, SwgohGGApi.getCharacterCount(player));
-        assert.strictEqual(playerStats.chars.zetas, 105);
+        assert.strictEqual(playerStats.chars.zetas, 88);
 
         assert.strictEqual(playerStats.ships.count, playerStats.ships.levels.reduce((accumulator, currentValue) => accumulator + currentValue));
         assert.strictEqual(playerStats.ships.count, playerStats.ships.rarities.reduce((accumulator, currentValue) => accumulator + currentValue));
